@@ -1,149 +1,96 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="zh-CN">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>女友微信聊天生成器</title>
-    <link rel="stylesheet" href="./styles.css" />
-    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js" defer></script>
-    <script src="./app.js" defer></script>
-  </head>
-  <body>
-    <div class="app-shell">
-      <header class="topbar">
-        <div class="brand">
-          <div class="brand-mark" aria-hidden="true">
-            <i data-lucide="message-circle-heart"></i>
-          </div>
-          <div>
-            <h1>女友微信聊天生成器</h1>
-          </div>
-        </div>
-        <div class="top-actions">
-          <button class="icon-button" id="copyTop" type="button">
-            <i data-lucide="copy"></i>
-            <span>复制</span>
-          </button>
-        </div>
-      </header>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>女友微信聊天生成器</title>
+<link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+<div class="app-shell">
+<header class="topbar">
+<div class="brand"><div class="brand-mark">♡</div><h1>女友微信聊天生成器</h1></div>
+<div class="top-actions"><button class="icon-button" id="copyTop" type="button">⧉ <span>复制</span></button></div>
+</header>
 
-      <main class="workspace">
-        <section class="input-pane" aria-labelledby="composeTitle">
-          <div class="section-head">
-            <h2 id="composeTitle">内容</h2>
-            <button class="ghost-button" id="clearBtn" type="button">
-              <i data-lucide="eraser"></i>
-              <span>清空</span>
-            </button>
-          </div>
+<main class="workspace">
 
-          <label class="field">
-            <span>她说了什么 / 你想表达什么</span>
-            <textarea id="contextInput" rows="7">她说：你都不关心我</textarea>
-          </label>
+<!-- 左侧输入 -->
+<section class="input-pane">
+<div class="section-head"><h2>内容</h2><button class="ghost-button" id="clearBtn" type="button">⌫ <span>清空</span></button></div>
 
-          <div class="quick-row" aria-label="快捷场景">
-            <button type="button" class="quick-chip" data-tone="comfort" data-example="她说：你都不关心我">不关心我</button>
-            <button type="button" class="quick-chip" data-tone="apology" data-example="我刚刚说话有点重，想哄她">说重了</button>
-            <button type="button" class="quick-chip" data-tone="night" data-example="晚上想跟她说晚安，甜一点">晚安</button>
-            <button type="button" class="quick-chip" data-tone="invite" data-example="想约她周末一起吃饭">约吃饭</button>
-          </div>
+<label class="field"><span>她说了什么 / 你想表达什么</span>
+<textarea id="contextInput" rows="6">她说：你都不关心我</textarea></label>
 
-          <div class="split-fields">
-            <label class="field">
-              <span>称呼</span>
-              <input id="nicknameInput" value="宝" maxlength="8" />
-            </label>
-            <label class="field">
-              <span>关系</span>
-              <select id="relationSelect">
-                <option value="girlfriend" selected>女朋友</option>
-                <option value="crush">暧昧中</option>
-                <option value="new">刚认识</option>
-              </select>
-            </label>
-          </div>
+<div class="quick-row" aria-label="快捷场景">
+<button type="button" class="quick-chip" data-tone="comfort" data-example="她说：你都不关心我">不关心我</button>
+<button type="button" class="quick-chip" data-tone="apology" data-example="我刚刚说话有点重，想哄她">说重了</button>
+<button type="button" class="quick-chip" data-tone="night" data-example="晚上想跟她说晚安，甜一点">晚安</button>
+<button type="button" class="quick-chip" data-tone="invite" data-example="想约她周末一起吃饭">约吃饭</button>
+</div>
 
-          <div class="control-group">
-            <div class="control-label">语气</div>
-            <div class="tone-grid" role="tablist" aria-label="语气">
-              <button type="button" class="tone-button is-active" data-tone="comfort">哄人</button>
-              <button type="button" class="tone-button" data-tone="apology">道歉</button>
-              <button type="button" class="tone-button" data-tone="sweet">撒娇</button>
-              <button type="button" class="tone-button" data-tone="daily">日常</button>
-              <button type="button" class="tone-button" data-tone="night">晚安</button>
-              <button type="button" class="tone-button" data-tone="invite">约见面</button>
-              <button type="button" class="tone-button" data-tone="funny">逗她</button>
-              <button type="button" class="tone-button" data-tone="serious">认真</button>
-            </div>
-          </div>
+<!-- API Key + 模式切换 -->
+<div class="api-strip">
+<label class="field" style="gap:4px"><span>DeepSeek API Key</span>
+<input id="apiKeyInput" type="password" placeholder="sk-xxx（选填）" maxlength="128">
+</label>
+<div id="modeToggle" class="mode-switch" role="button" tabindex="0" aria-label="切换生成模式">✨ 本地</div>
+</div>
 
-          <div class="option-strip">
-            <label class="toggle">
-              <input id="emojiToggle" type="checkbox" checked />
-              <span>表情</span>
-            </label>
-            <label class="toggle">
-              <input id="stickerToggle" type="checkbox" checked />
-              <span>贴纸字样</span>
-            </label>
-            <label class="range-field">
-              <span>气泡</span>
-              <input id="bubbleRange" type="range" min="1" max="4" step="1" value="3" />
-              <output id="bubbleCount">3</output>
-            </label>
-          </div>
+<div class="split-fields">
+<label class="field"><span>称呼</span><input id="nicknameInput" value="宝" maxlength="8"></label>
+<label class="field"><span>关系</span>
+<select id="relationSelect">
+<option value="girlfriend" selected>女朋友</option>
+<option value="crush">暧昧中</option>
+<option value="new">刚认识</option>
+</select></label>
+</div>
 
-          <button class="primary-button" id="generateBtn" type="button">
-            <i data-lucide="sparkles"></i>
-            <span>生成</span>
-          </button>
-        </section>
+<div class="control-group">
+<div class="control-label">语气</div>
+<div class="tone-grid" role="tablist" aria-label="语气">
+<button type="button" class="tone-button is-active" data-tone="comfort">哄人</button>
+<button type="button" class="tone-button" data-tone="apology">道歉</button>
+<button type="button" class="tone-button" data-tone="sweet">撒娇</button>
+<button type="button" class="tone-button" data-tone="daily">日常</button>
+<button type="button" class="tone-button" data-tone="night">晚安</button>
+<button type="button" class="tone-button" data-tone="invite">约见面</button>
+<button type="button" class="tone-button" data-tone="funny">逗她</button>
+<button type="button" class="tone-button" data-tone="serious">认真</button>
+</div></div>
 
-        <section class="preview-pane" aria-labelledby="previewTitle">
-          <div class="section-head">
-            <h2 id="previewTitle">微信预览</h2>
-            <div class="variant-tabs" id="variantTabs" role="tablist" aria-label="版本"></div>
-          </div>
+<div class="option-strip">
+<label class="toggle"><input id="emojiToggle" type="checkbox" checked> <span>表情</span></label>
+<label class="toggle"><input id="stickerToggle" type="checkbox" checked> <span>贴纸字样</span></label>
+<label class="range-field"><span>气泡</span><input id="bubbleRange" type="range" min="1" max="4" step="1" value="3"><output id="bubbleCount">3</output></label>
+</div>
 
-          <div class="phone-frame">
-            <div class="phone-status">
-              <span>14:43</span>
-              <span class="status-icons">
-                <i data-lucide="wifi"></i>
-                <i data-lucide="battery-full"></i>
-              </span>
-            </div>
-            <div class="chat-title">
-              <i data-lucide="chevron-left"></i>
-              <span id="chatName">宝</span>
-              <i data-lucide="more-horizontal"></i>
-            </div>
-            <div class="chat-list" id="chatPreview" aria-live="polite"></div>
-            <div class="wechat-input">
-              <i data-lucide="mic"></i>
-              <div class="fake-input"></div>
-              <i data-lucide="smile"></i>
-              <i data-lucide="plus-circle"></i>
-            </div>
-          </div>
+<button class="primary-button" id="generateBtn" type="button">✦ <span>生成</span></button>
+</section>
 
-          <div class="result-actions">
-            <button class="icon-button" id="copyBtn" type="button">
-              <i data-lucide="copy"></i>
-              <span>复制当前版本</span>
-            </button>
-            <button class="ghost-button" id="shuffleBtn" type="button">
-              <i data-lucide="refresh-cw"></i>
-              <span>换一版</span>
-            </button>
-          </div>
+<!-- 右侧预览 -->
+<section class="preview-pane">
+<div class="section-head"><h2>微信预览</h2><div class="variant-tabs" id="variantTabs" role="tablist" aria-label="版本"></div></div>
 
-          <div class="note-box" id="noteBox"></div>
-        </section>
-      </main>
-    </div>
+<div class="phone-frame">
+<div class="phone-status"><span>14:43</span><span class="status-icons">≋ ▰</span></div>
+<div class="chat-title"><span>‹</span><span id="chatName">宝</span><span>•••</span></div>
+<div class="chat-list" id="chatPreview" aria-live="polite"></div>
+<div class="wechat-input"><span>◉</span><div class="fake-input"></div><span>☺</span><span>+</span></div>
+</div>
 
-    <div class="toast" id="toast" role="status" aria-live="polite">已复制</div>
-  </body>
+<div class="result-actions">
+<button class="icon-button" id="copyBtn" type="button">⧉ <span>复制当前版本</span></button>
+<button class="wechat-button" id="wechatBtn" type="button">➤ <span>复制并打开微信</span></button>
+<button class="ghost-button" id="shuffleBtn" type="button">↻ <span>换一版</span></button>
+</div>
+
+<div class="note-box" id="noteBox"></div>
+</section>
+</main>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite">已复制</div>
+<script src="./app.js" defer></script>
+</body>
 </html>
